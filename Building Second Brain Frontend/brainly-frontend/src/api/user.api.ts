@@ -47,7 +47,7 @@ export async function GetContent(id: string) {
     
     return res.data;
 }
-export async function deleteContent(id: string,contentId:string) {
+export async function deleteContent(contentId:string) {
 
     const res = await axiosInstance.delete(
         '/content',
@@ -56,7 +56,7 @@ export async function deleteContent(id: string,contentId:string) {
                 contentId:contentId
             },
             headers: {
-                Authorization: id // 👈 correctly sends as HTTP header
+                Authorization: localStorage.getItem('token') // 👈 correctly sends as HTTP header
             }
         }
     );
@@ -87,5 +87,10 @@ export async function PostContent(id:string,{title,link,type,tag}:content_object
         }
     );
 
+    return res.data;
+}
+
+export async function SearchContent(value:string){
+    const res =  await axiosInstance.get(`/autocomplete?q=${value}`)
     return res.data;
 }

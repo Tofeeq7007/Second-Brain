@@ -1,12 +1,15 @@
 type InputProps = {
     type?:string
   placeholder: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: string) => void,
+  ref?:React.Ref<HTMLInputElement>;
+  
 };
-export function Input({placeholder,onChange,type} : InputProps){
+export function Input({placeholder,onChange,type,ref} : InputProps){
     return (
     <div>
         <input 
+            ref={ref}
             type={type ? type : "text"} 
             placeholder={placeholder} 
             onChange={onChange ? (e)=>onChange(e.target.value) : ()=>{}} 

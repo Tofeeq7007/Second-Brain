@@ -3,35 +3,46 @@ import { CrossIcon } from "../../icons/CrossIcon";
 import { Button } from "./Button";
 import { Input } from "../Input";
 import { PostContent } from "../../api/user.api";
-interface ContentModal{
-    open:boolean,
-    onclose:()=>void
-}
-export function CreateContentModal({open,onclose}:ContentModal){
-    const ref = useRef<HTMLDivElement>(null);
+import { useDispatch, useSelector } from "react-redux";
+import { Close } from "../../store/features/ModalSlice";
+import type { MODAL_VALUE } from "../../store/store";
+
+export function CreateContentModal(){
     
-function solve(e:React.MouseEvent<HTMLDivElement>) {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-        onclose();
-    }
-}
-    const [title , setTitle] = useState("");
+    const  ContentType = {
+        Youtube:"youtube",
+        Twitter:"twitter",
+        Link:"link"
+    } 
+    const ref = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
+    
+    function solve(e:React.MouseEvent<HTMLDivElement>) {
+        if (ref.current && !ref.current.contains(e.target as Node)) {
+            dispatch(Close());
+        }
+    }   
+    const open = useSelector((state:MODAL_VALUE)=>(state.Modal.ModalOpen));
+    const titleRef = useRef<HTMLInputElement>(null);
+    const linkRef = useRef<HTMLInputElement>(null);
+    // const [title , setTitle] = useState("");
     const [error,setError] = useState("");
-    const [link , setLink] = useState("");
-    const [type, setType] = useState("");
+    // const [link , setLink] = useState("");
+    const [type, setType] = useState(ContentType.Youtube);
     const [tag, setTag] = useState("");
     const id = localStorage.getItem('token');
     async function AddNewContent() {
-
+        const title = titleRef.current?.value || "";
+        const link = linkRef.current?.value || "";
         try{
 
-            if(title.trim() != "" && link.trim() != "" && type!="" && tag.trim() != ""){
+            if(title.trim() != "" && link.trim() != ""){
                 type.toLowerCase()
                 const data = await PostContent(id as string ,{title,link,type,tag})
                 
                 console.log(data);
                 alert(data.message);
-                onclose();
+                dispatch(Close());
                 setError("")
                 location.reload()
             }        
@@ -58,7 +69,7 @@ function solve(e:React.MouseEvent<HTMLDivElement>) {
                 <div ref={ref} className="flex flex-col size-150  justify-center">
                     <span className="bg-white opacity-100 p-4  border-slate-500  border-2 shadow-lg rounded-xl">
                             <div className="flex justify-end">
-                                <div className="cursor-pointer" onClick={onclose}>
+                                <div className="cursor-pointer" onClick={()=>dispatch(Close())}>
                                     <CrossIcon size="lg"/>
                                 </div>
                             </div>
@@ -68,10 +79,16 @@ function solve(e:React.MouseEvent<HTMLDivElement>) {
                         {/* Input Component */}
                         <div className="pt-2 flex flex-col gap-2">
 
-                        <Input placeholder={"Title"} onChange={(v)=>setTitle(v)}/>
-                        <Input placeholder={"link"} onChange={(v)=>setLink(v)}/>
-                        <Input placeholder={"Type"} onChange={(v)=>setType(v)}/>
-                        <Input placeholder={"tag (Optional !)"} onChange={(v)=>setTag(v || "Not Mention")}/>
+                        <Input placeholder={"Title"} ref={titleRef}/>
+                        <Input placeholder={"link"} ref={linkRef}/>
+                        <div className={`text-semibold`}>TYPE :</div>
+                        <div className="flex gap-2">
+                            <Button text="Youtube" size="sm" variant={type == ContentType.Youtube ? "secondary":"primary"} onClick={()=>setType(ContentType.Youtube)}/>
+                            <Button text="Twitter" size="sm" variant={type == ContentType.Twitter ? "secondary":"primary"} onClick={()=>setType(ContentType.Twitter)}/>
+                            <Button text="Link" size="sm" variant={type == ContentType.Link ? "secondary":"primary"} onClick={()=>setType(ContentType.Link)}/>
+                        </div>
+                        {/* <Input placeholder={"Type"} onChange={(v)=>setType(v)}/> */}
+                        <Input placeholder={"tag (Optional !)"} onChange={(v)=>setTag(v || "Not Mention")} />
                         </div>
                         <div className="flex justify-center mt-10">
 
