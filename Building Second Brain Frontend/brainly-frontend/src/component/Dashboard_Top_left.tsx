@@ -8,9 +8,7 @@ export const Top_left_Corner = ()=>{
     const dispatch = useDispatch()
     return <>
         
-            <div className="min-[900px]:visible hidden">  <Button startIcon={<ShareIcon size="md"/>} size="sm" variant="primary" text="Share Brain"/></div>
-            <div className="mt-2">
+          <Button startIcon={<ShareIcon size="md"/>} size="sm" variant="primary" text="Share Brain"/>
                 <Button  startIcon={<PlusIcon size="lg"/>} onClick={()=>{dispatch(Open())}} size="md" variant="secondary" text="Add Content"/>
-            </div>    
     </>
 }

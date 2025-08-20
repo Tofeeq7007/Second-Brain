@@ -46,13 +46,16 @@ export function Dashboard() {
   return (
       <div>
         <Sidebar setType={setType}/>
-        <div className={`p-4  ml-${popmsg? '15':'72'} min-h-screen bg-gray-100 border-gray-300 border-2 `}>
+        <div className={`p-4   ${popmsg ? "ml-16" : "ml-72"} min-h-screen bg-gray-100 border-gray-300 border-2 `}>
           <CreateContentModal/>       
 
           <div className='flex justify-between items-center flex-wrap'>
             <div className='text-2xl font-bold font-roboto'>All Notes</div>
+            <div className='flex gap-10'>
+
                   <SearchBox setSearchValue={setSearchData} />
               <Top_left_Corner/>
+            </div>
           </div>
           {/* <Button  size="lg" variant="secondary" text="Add Content"/> */}
           <div className='w-1/3'>
@@ -71,7 +74,7 @@ export function Dashboard() {
                 );  
             })}            
           </div>
-          <div className={`grid  ${popmsg ? 'grid-cols-4' : 'grid-cols-3'} grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 mt-7`}>
+          <div className={`grid  ${popmsg ? 'grid-cols-4' : 'grid-cols-3'} gap-10 mt-7`}>
 
             {data?.content?.map((item:ContentItem)=>{
               const {_id, type , link, title,description,image}:CardProps = item;
